@@ -6,15 +6,25 @@ jobs:
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
-      - name: Clone step
+      - name: Clone
         run: git clone https://github.com/mnau23/github-actions-katas.git
+      - name: Upload repo
+        uses: actions/upload-artifact@v2
+        with:
+          name: code
+          path: .
   job-2:
     name: Test
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     needs: job-1
     steps:
-      - name: Test step
+      - name: Download repo
+        uses: actions/download-artifact@v2
+        with:
+          name: code
+          path: .
+      - name: Test
         run: ci/unit-test-app.sh
   job-3:
     name: Build
@@ -22,5 +32,10 @@ jobs:
     container: gradle:6-jdk11
     needs: job-1
     steps:
+      - name: Download repo
+        uses: actions/download-artifact@v2
+        with:
+          name: code
+          path: .
       - name: Build step
         run: ci/build-app.sh
