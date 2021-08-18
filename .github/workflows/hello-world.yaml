@@ -3,22 +3,22 @@ on: push
 jobs:
   my-job:
     job-1:
-      name: Clone-down
       runs-on: ubuntu-latest
       container: gradle:6-jdk11
-      uses: actions/upload-artifact@v2
-        with:
-          name: code
-          path: .
+      steps:
+        - name: Clone-down
+          run: actions/upload-artifact@v2
     job-2:
-      name: Test
       runs-on: ubuntu-latest
       container: gradle:6-jdk11
       needs: job-1
-      run: ci/unit-test-app.sh
+      steps:
+        - name: Test
+          run: ci/unit-test-app.sh
     job-3:
-      name: Build
       runs-on: ubuntu-latest
       container: gradle:6-jdk11
       needs: job-1
-      run: ci/build-app.sh
+      steps:
+      - name: Build
+        run: ci/build-app.sh
